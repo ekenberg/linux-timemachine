@@ -31,10 +31,53 @@
         <hr>
 
         <section id="main_content">
-          <h1>
-<a name="linux-timemachine" class="anchor" href="#linux-timemachine"><span class="octicon octicon-link"></span></a>linux-timemachine</h1>
+          <h2>
+<a name="linux-time-machine" class="anchor" href="#linux-time-machine"><span class="octicon octicon-link"></span></a>Linux Time Machine</h2>
 
-<p>Rsync incremental backups through hard linking (save space)</p>
+<p>Rsync incremental backups with hard linking. Save time and space. And your data.</p>
+
+<p>Macs have automatic incremental backups built in through <a href="http://en.wikipedia.org/wiki/Time_Machine_%28Mac_OS%29">Time Machine</a></p>
+
+<p><img src="http://ekenberg.github.io/linux-timemachine/images/mac-timemachine.png" alt="Apple TimeMachine"></p>
+
+<p>On Linux, we have rsync, bash and cron. Rsync can use <a href="http://en.wikipedia.org/wiki/Hard_link">hard links</a> for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space. Still every backup is complete and self contained. Almost like magic.</p>
+
+<p>This script is how I make system backups on my Linux workstation.</p>
+
+<h3>
+<a name="prerequisites" class="anchor" href="#prerequisites"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
+
+<ul>
+<li>Backup to a filesystem which supports hard and soft links. No problem except for FAT or NTFS (Microsoft).</li>
+<li>Mount the backup filesystem locally (NFS, USB-cable etc). I use a QNAP NAS which is mounted to /mnt/backup over NFS</li>
+</ul><h3>
+<a name="how-to" class="anchor" href="#how-to"><span class="octicon octicon-link"></span></a>How To</h3>
+
+<ul>
+<li>Mount your backup target</li>
+<li>Set configuration in backup.conf</li>
+<li>Set exclude paths in backup_exclude.conf</li>
+<li>Test with some small directory and -v: <code>sudo do_incremental_rsync.sh -v ~/test-directory</code>
+</li>
+<li>Test a full system backup: <code>sudo do_incremental_rsync.sh</code>. If /home is on a separate partition: <code>sudo do_incremental_rsync.sh /home /</code>. See <a href="#notes">Notes</a> below.</li>
+<li>Finally, set up to run (as root) once a day through cron.</li>
+</ul><h3>
+<a name="check-hard-linking" class="anchor" href="#check-hard-linking"><span class="octicon octicon-link"></span></a>Check hard linking</h3>
+
+<p>To verify that hard linking actually works, use the <code>stat</code> command on a file in the latest backup which you know has not been changed for some time. <code>stat</code> shows a field <code>Links: #</code> which tells how many hard links a file has. My /etc/fstab hasn't changed for a long time:</p>
+
+<p><img src="http://ekenberg.github.io/linux-timemachine/images/stat-verify-hard-links.jpg" alt="Stat output"></p>
+
+<p><a name="notes"></a></p>
+
+<h3>
+<a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h3>
+
+<ul>
+<li>I do backups nightly, and the script stores them with the current date in the directory name. So any additional backups during the day will end up overwriting the current date's backup. That's fine for me, but if you want to keep more frequent copies, you should look at the <code>$TODAY</code> variable in the script. Maybe add hour or hour-minute to the format.</li>
+<li>rsync is run with --one-file-system. If you have several filesystems to backup, you must supply them all as arguments to the script. Example: If /home is mounted on a separate partition you would make a system backup like this: <code>do_incremental_rsync.sh /home /</code>
+</li>
+</ul>
         </section>
 
         <footer>
