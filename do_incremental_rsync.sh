@@ -40,7 +40,7 @@ fi
 
 BACKUP_WHAT=("/")
 if [ $# -gt 0 ]; then
-	BACKUP_WHAT=("$@")
+    BACKUP_WHAT=("$@")
 fi
 
 TODAY=`date +"%Y-%m-%d"`
@@ -50,18 +50,20 @@ NEW_BACKUP="${BACKUP_BASE}/${BACKUP_NAME}-${TODAY}"
 
 mkdir -p "$NEW_BACKUP"
 
-[ -d "$NEW_BACKUP" ] || die "No such directory: $NEW_BACKUP"    
+[ -d "$NEW_BACKUP" ] || die "No such directory: $NEW_BACKUP"
 
 for backup_item in "${BACKUP_WHAT[@]}"; do
-	backup_item_real=`realpath "$backup_item" 2>/dev/null`
+    backup_item_real=`readlink -f "$backup_item" 2>/dev/null`
+
+    [ -z "$backup_item_real" ] && die "Cannot resolv canonical path. Missing tool readlink?"
 
     if [ ! -d "$backup_item_real" ]; then
-    	echo "$backup_item: Not a directory, skipping!"
-		continue
-	fi
+        echo "$backup_item: Not a directory, skipping!"
+        continue
+    fi
 
-#	echo "rsync $VERBOSE_ARGS -a --delete --relative --one-file-system --numeric-ids --exclude-from=backup_exclude.conf --link-dest=\"$CURRENT_BACKUP\" \"$backup_item_real\" \"$NEW_BACKUP\""
-	rsync $VERBOSE_ARGS -a --delete --relative --one-file-system --numeric-ids --exclude-from=backup_exclude.conf --link-dest="$CURRENT_BACKUP" "$backup_item_real" "$NEW_BACKUP"
+#   echo "rsync $VERBOSE_ARGS -a --delete --relative --one-file-system --numeric-ids --exclude-from=backup_exclude.conf --link-dest=\"$CURRENT_BACKUP\" \"$backup_item_real\" \"$NEW_BACKUP\""
+    rsync $VERBOSE_ARGS -a --delete --relative --one-file-system --numeric-ids --exclude-from=backup_exclude.conf --link-dest="$CURRENT_BACKUP" "$backup_item_real" "$NEW_BACKUP"
 done
 
 # Update soft link to current backup
