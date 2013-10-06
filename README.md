@@ -1,7 +1,7 @@
 Linux Time Machine
 ------------------
 
-Rsync incremental backups with hard linking. Save time and space. And your data.
+Rsync incremental backups with hard links. Save time and space. And your data.
 
 Macs have automatic incremental backups built in through [Time Machine](http://en.wikipedia.org/wiki/Time_Machine_%28Mac_OS%29)
 
@@ -24,7 +24,7 @@ This script is how I make system backups on my Linux workstation.
 * Test a full system backup: `sudo do_incremental_rsync.sh`. If /home is on a separate partition: `sudo do_incremental_rsync.sh /home /`. See [Notes](#notes) below.
 * Finally, set up to run (as root) once a day through cron.
 
-### Check hard linking
+### Check hard links
 To verify that hard linking actually works, use the `stat` command on a file in the latest backup which you know has not been changed for some time. `stat` shows a field `Links: #` which tells how many hard links a file has. My /etc/fstab hasn't changed for a long time:
 
 ![Stat output](http://ekenberg.github.io/linux-timemachine/images/stat-verify-hard-links.jpg)
