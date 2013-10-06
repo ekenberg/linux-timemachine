@@ -5,9 +5,9 @@
 
 Macs have automatic incremental backups built in through [Time Machine](http://en.wikipedia.org/wiki/Time_Machine_%28Mac_OS%29)
 
-[link to starfield imagé]
+![Apple TimeMachine](http://ekenberg.github.io/linux-timemachine/images/mac-timemachine.png)
 
-On Linux, we can do something similar with rsync.
+On Linux, we can use rsync, bash and cron.
 
 This script is how I make system backups on my Linux workstation. There are some prerequisites:
 
