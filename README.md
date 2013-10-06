@@ -21,7 +21,7 @@ This script is how I make system backups on my Linux workstation.
 * Set configuration in backup.conf
 * Set exclude paths in backup_exclude.conf
 * Test with some small directory and -v: `sudo do_incremental_rsync.sh -v ~/test-directory`
-* Test a manual system backup: `sudo do_incremental_rsync.sh`. If /home is on a separate partition: `sudo do_incremental_rsync.sh /home /`. See [Notes](#notes) below.
+* Test a full system backup: `sudo do_incremental_rsync.sh`. If /home is on a separate partition: `sudo do_incremental_rsync.sh /home /`. See [Notes](#notes) below.
 * Finally, set up to run (as root) once a day through cron.
 
 ### Check hard linking
