@@ -1,5 +1,2 @@
-* Ställ in Sublime Text på att alltid använda spaces (även på macen)
 
-* Om man kör scriptet på enskild katalog FÖRE man gör full systembackup så kommer hard links inte funka. Eftersom -current nu pekar till dagens backup, som själv endast har den enskilda katalogen från första körningen. Hur lösa - bara förklara i README?
 
-* Förklara bättre överst i README / gh-page VAD det egentligen är scriptet gör. Att resultatet är en komplett backup per dygn lång tid bakåt med minimalt utrymmeskrav.

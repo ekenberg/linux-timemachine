@@ -7,11 +7,11 @@ Macs have automatic incremental backups built in through [Time Machine](http://e
 
 ![Apple TimeMachine](http://ekenberg.github.io/linux-timemachine/images/mac-timemachine.png)
 
-Linux has rsync, bash and cron. Rsync can use [hard links](http://en.wikipedia.org/wiki/Hard_link) for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space. Still every backup is complete and self contained. Almost like magic.
+Linux has rsync, bash and cron. Rsync can use [hard links](http://en.wikipedia.org/wiki/Hard_link) for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space.
+
+A few entries from my personal backup. As you can see, each day gets its own directory. Inside is a complete backup with every file from my workstation. Still, each day takes very little extra space, since only modified files are copied. The rest are hard links. (Don't mind the modification times - they are set by rsync to the last modification time of / on my workstation):
 
 ![Linux TimeMachine](http://ekenberg.github.io/linux-timemachine/images/linux-timemachine.png)
-
-This script is how I make system backups on my Linux workstation.
 
 ### Prerequisites
 * Backup to a filesystem which supports hard and soft links. No problem except for FAT or NTFS (Microsoft).
@@ -33,6 +33,6 @@ To verify that hard linking actually works, use the `stat` command on a file in 
 <a name='notes'/>
 ### Notes
 * _Important:_ For hard links to work, the first backup each day must be a full system backup. Why? Because the script updates the current-link when it is run. If the first backup of the day is for /home/user/some/directory, and the current-link is updated. When a full backup is run, it will look for the last backup through the current-link and not find any files except /home/user/some/directory, and it must make a new copy of everything. This will waste a lot of space! Make sure to do a full backup every night just after midnight and you should be fine.
-* I do backups nightly, and the script stores them with the current date in the directory name. So any additional backups during the day will end up overwriting the current date's backup. That's fine for me, but if you want to keep more frequent copies, you should look at the `$TODAY` variable in the script. Maybe add hour or hour-minute to the format. Please understand that the first backup to every new date/time should be a full backup.
+* I do backups nightly, and the script stores them with the current date in the directory name. So any additional backups during the day will end up overwriting the current date's backup. That's fine for me, but if you want to keep more frequent copies, you should look at the `$TODAY` variable in the script. Maybe add hour or hour-minute to the format. Please understand that the first backup to every new date/time should be a full backup, as explained above.
 * rsync is run with --one-file-system. If you have several filesystems to backup, you must supply them all as arguments to the script. Example: If /home is mounted on a separate partition you would make a system backup like this: `do_incremental_rsync.sh /home /`
 
