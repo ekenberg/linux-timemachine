@@ -9,7 +9,7 @@ Macs have automatic incremental backups built in through [Time Machine](http://e
 
 Linux has rsync, bash and cron. Rsync can use [hard links](http://en.wikipedia.org/wiki/Hard_link) for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space. Still every backup is complete and self contained. Almost like magic.
 
-![Linux TimeMachine](httpd://ekenberg.github.io/linux-timemachine/images/linux-timemachine.png)
+![Linux TimeMachine](http://ekenberg.github.io/linux-timemachine/images/linux-timemachine.png)
 
 This script is how I make system backups on my Linux workstation.
 
