@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Linux-timemachine by ekenberg</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Linux-timemachine : Backup with hard links. Save time and space. And your data." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Linux-timemachine</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Linux-timemachine</h1>
-          <h2>Backup with hard links. Save time and space. And your data.</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ekenberg/linux-timemachine">View on GitHub</a>
+
+          <h1 id="project_title">Linux-timemachine</h1>
+          <h2 id="project_tagline">Backup with hard links. Save time and space. And your data.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ekenberg/linux-timemachine/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ekenberg/linux-timemachine/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/ekenberg/linux-timemachine/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/ekenberg/linux-timemachine/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/ekenberg/linux-timemachine" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h2>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
 <a name="linux-time-machine" class="anchor" href="#linux-time-machine"><span class="octicon octicon-link"></span></a>Linux Time Machine</h2>
 
 <p>Rsync incremental backups with hard links. Save time and space. And your data.</p>
@@ -40,9 +40,11 @@
 
 <p><img src="http://ekenberg.github.io/linux-timemachine/images/mac-timemachine.png" alt="Apple TimeMachine"></p>
 
-<p>On Linux, we have rsync, bash and cron. Rsync can use <a href="http://en.wikipedia.org/wiki/Hard_link">hard links</a> for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space. Still every backup is complete and self contained. Almost like magic.</p>
+<p>Linux has rsync, bash and cron. Rsync can use <a href="http://en.wikipedia.org/wiki/Hard_link">hard links</a> for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space.</p>
 
-<p>This script is how I make system backups on my Linux workstation.</p>
+<p>A few entries from my personal backup. As you can see, each day gets its own directory. Inside is a complete backup with every file from my workstation. Still, each day takes very little extra space, since only modified files are copied. The rest are hard links. (Don't mind the modification times - they are set by rsync to the last modification time of / on my workstation):</p>
+
+<p><img src="http://ekenberg.github.io/linux-timemachine/images/linux-timemachine.png" alt="Linux TimeMachine"></p>
 
 <h3>
 <a name="prerequisites" class="anchor" href="#prerequisites"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
@@ -57,10 +59,10 @@
 <li>Mount your backup target</li>
 <li>Set configuration in backup.conf</li>
 <li>Set exclude paths in backup_exclude.conf</li>
-<li>Test with some small directory and -v: <code>sudo do_incremental_rsync.sh -v ~/test-directory</code>
+<li>Test with some small directory and -v: <code>sudo do_incremental_rsync.sh -v /some/test-directory</code>
 </li>
-<li>Test a full system backup: <code>sudo do_incremental_rsync.sh</code>. If /home is on a separate partition: <code>sudo do_incremental_rsync.sh /home /</code>. See <a href="#notes">Notes</a> below.</li>
-<li>Finally, set up to run (as root) once a day through cron.</li>
+<li>Do a full system backup: <code>sudo do_incremental_rsync.sh</code>. If /home is on a separate partition: <code>sudo do_incremental_rsync.sh /home /</code>. The first full backup will take a long time since all files must be copied.</li>
+<li>Finally, set up to run nightly, as root, through cron. I recommend doing a full run early morning or just after midnight, see <a href="#notes">Notes</a> below.</li>
 </ul><h3>
 <a name="check-hard-links" class="anchor" href="#check-hard-links"><span class="octicon octicon-link"></span></a>Check hard links</h3>
 
@@ -74,19 +76,24 @@
 <a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h3>
 
 <ul>
-<li>I do backups nightly, and the script stores them with the current date in the directory name. So any additional backups during the day will end up overwriting the current date's backup. That's fine for me, but if you want to keep more frequent copies, you should look at the <code>$TODAY</code> variable in the script. Maybe add hour or hour-minute to the format.</li>
+<li>
+<em>Important:</em> For hard links to work, the first backup each day must be a full system backup. Why? Because the script updates the current-link when it is run. If the first backup of the day is for /home/user/some/directory, and the current-link is updated. When a full backup is run, it will look for the last backup through the current-link and not find any files except /home/user/some/directory, and it must make a new copy of everything. This will waste a lot of space! Make sure to do a full backup every night just after midnight and you should be fine.</li>
+<li>I do backups nightly, and the script stores them with the current date in the directory name. So any additional backups during the day will end up overwriting the current date's backup. That's fine for me, but if you want to keep more frequent copies, you should look at the <code>$TODAY</code> variable in the script. Maybe add hour or hour-minute to the format. Please understand that the first backup to every new date/time should be a full backup, as explained above.</li>
 <li>rsync is run with --one-file-system. If you have several filesystems to backup, you must supply them all as arguments to the script. Example: If /home is mounted on a separate partition you would make a system backup like this: <code>do_incremental_rsync.sh /home /</code>
 </li>
 </ul>
-        </section>
-
-        <footer>
-          Linux-timemachine is maintained by <a href="https://github.com/ekenberg">ekenberg</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Linux-timemachine maintained by <a href="https://github.com/ekenberg">ekenberg</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
