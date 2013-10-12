@@ -7,12 +7,13 @@ Macs have automatic incremental backups built in through [Time Machine](http://e
 
 ![Apple TimeMachine](http://ekenberg.github.io/linux-timemachine/images/mac-timemachine.png)
 
-On Linux, we have rsync, bash and cron. Rsync can use [hard links](http://en.wikipedia.org/wiki/Hard_link) for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space. Still every backup is complete and self contained. Almost like magic.
+Linux has rsync, bash and cron. Rsync can use [hard links](http://en.wikipedia.org/wiki/Hard_link) for unchanged files: only files changed since the previous backup are copied. This saves a lot of time and storage space. Still every backup is complete and self contained. Almost like magic.
+
+![Linux TimeMachine](httpd://ekenberg.github.io/linux-timemachine/images/linux-timemachine.png)
 
 This script is how I make system backups on my Linux workstation.
 
 ### Prerequisites
-
 * Backup to a filesystem which supports hard and soft links. No problem except for FAT or NTFS (Microsoft).
 * Mount the backup filesystem locally (NFS, USB-cable etc). I use a QNAP NAS which is mounted to /mnt/backup over NFS
 
@@ -20,7 +21,7 @@ This script is how I make system backups on my Linux workstation.
 * Mount your backup target
 * Set configuration in backup.conf
 * Set exclude paths in backup_exclude.conf
-* Test with some small directory and -v: `sudo do_incremental_rsync.sh -v ~/test-directory`
+* Test with some small directory and -v: `sudo do_incremental_rsync.sh -v /some/test-directory`
 * Test a full system backup: `sudo do_incremental_rsync.sh`. If /home is on a separate partition: `sudo do_incremental_rsync.sh /home /`. See [Notes](#notes) below.
 * Finally, set up to run (as root) once a day through cron.
 

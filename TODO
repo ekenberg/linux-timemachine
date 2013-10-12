@@ -1,6 +1,4 @@
 * Ställ in Sublime Text på att alltid använda spaces (även på macen)
-* Ta bort ev ~/foo i exempel
-* Skriv i README att man alltid använder full path, aldrig ~ eftersom det blir förvirring när man kör som root
 
 * Om man kör scriptet på enskild katalog FÖRE man gör full systembackup så kommer hard links inte funka. Eftersom -current nu pekar till dagens backup, som själv endast har den enskilda katalogen från första körningen. Hur lösa - bara förklara i README?
 
