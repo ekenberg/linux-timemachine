@@ -31,6 +31,7 @@ To verify that hard linking actually works, use the `stat` command on a file in 
 ![Stat output](http://ekenberg.github.io/linux-timemachine/images/stat-verify-hard-links.jpg)
 
 <a name='notes'/>
+
 ### Notes
 * _Important:_ For hard links to work, the first backup each day must be a full system backup. Why? Because the script updates the current-link when it is run. If the first backup of the day is for /home/user/some/directory, and the current-link is updated. When a full backup is run, it will look for the last backup through the current-link and not find any files except /home/user/some/directory, and it must make a new copy of everything. This will waste a lot of space! Make sure to do a full backup every night just after midnight and you should be fine.
 * I do backups nightly, and the script stores them with the current date in the directory name. So any additional backups during the day will end up overwriting the current date's backup. That's fine for me, but if you want to keep more frequent copies, you should look at the `$TODAY` variable in the script. Maybe add hour or hour-minute to the format. Please understand that the first backup to every new date/time should be a full backup, as explained above.
